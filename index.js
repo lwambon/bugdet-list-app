@@ -67,7 +67,7 @@ program
         console.log(currentBudget.title)
         console.log(currentBudget.quantity)
         console.log(currentBudget.price)
-        console.log("_____________________")
+        console.log("_____________________\n")
     })
   })
 
