@@ -28,7 +28,7 @@ program
       quantity: quantity,
       price: price,
     };
-    const loadedBudget = fs.readFileSync("./data/budget.json", "utf-8");
+    const loadedBudget = fs.readFileSync("./data/budget.json", "utf8");
 
     let budget;
     if (!loadedBudget) {
@@ -51,24 +51,73 @@ program
     console.log(chalk.bgMagentaBright(`bugdet added succefully`));
   });
 
-  //reads all bugdet to the console
-  program.command("read")
+//reads all bugdet to the console
+program
+  .command("read")
   .description("lists all the budget listed")
-  .action(function () {
+  .option("-title| --title <value>", "bugdet title to be displayed")
+  .action(function (options) {
+    const title = options.title;
     const loadedBudget = fs.readFileSync("./data/budget.json", "utf-8");
     const budget = JSON.parse(loadedBudget);
 
-    if(budget.length === 0) {
-        console.log(chalk.bgCyanBright(`no any bugdet added,, add one soon!!`))
-        return;
+    if (budget.length === 0) {
+      console.log(chalk.bgCyanBright(`no any bugdet added,, add one soon!!`));
+      return;
     }
 
-    budget.forEach(function(currentBudget) {
-        console.log(currentBudget.title)
-        console.log(currentBudget.quantity)
-        console.log(currentBudget.price)
-        console.log("_____________________\n")
-    })
-  })
+    //get item/get items
+    if (title) {
+      const budgett = budget.find(
+        (currentBudget) => currentBudget.title === title,
+      );
+      if (budgett) {
+        console.log(budgett.title);
+        console.log(budgett.quantity);
+        console.log(budgett.price);
+        return;
+      }
+      console.log(chalk.bgGreenBright(`the budget with '${title}' was found`));
+      return;
+    }
 
+    budget.forEach(function (currentBudget) {
+      console.log(currentBudget.title);
+      console.log(currentBudget.quantity);
+      console.log(currentBudget.price);
+      console.log("_____________________\n");
+    });
+  });
+
+//delete item from the budget
+program
+  .command("delete")
+  .description("delete unwanted item from the budget")
+  .option("-title| --title <value>", "item to be deleted from the budget")
+  .action(function (options) {
+    const title = options.title;
+    const loadedBudget = fs.readFileSync("./data/budget.json", "utf-8");
+    const budget = JSON.parse(loadedBudget);
+
+    if (budget.length === 0) {
+      console.log(chalk.bgRedBright`nothing to delete`);
+    }
+    const budgetStored = budget.filter(
+      (currentBudget) => currentBudget.title !== title,
+    );
+    fs.writeFileSync("./data/budget.json", JSON.stringify(budgetStored));
+    if (budgetStored.length === budget.length) {
+        console .log(chalk.blue`nothing has been deleted '${title}' doesn't exist`)
+        return;
+    }
+    console.log(
+      chalk.bgYellowBright`budget with '${title}' has been deleted successfully`,
+    );
+  });
+
+  //update
+  program
+  .command("update")
+  .describe("update the budget list using title, quantity , price")
+  .option("-title |--title","title to be updated")
 program.parse(process.argv);
