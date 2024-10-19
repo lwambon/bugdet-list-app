@@ -1,1 +1,5 @@
-[{"title":"unga","quantity":"1kg","price":"100"},{"title":"green beans","quantity":"5kg","price":"900"},{"title":"green peas","quantity":"2kg","price":"300"}]
+[
+  { "title": "rice", "quantity": "1kg", "price": "100" },
+  { "title": "green beans", "quantity": "5kg", "price": "900" },
+  { "title": "green peas", "quantity": "2kg", "price": "300" }
+]

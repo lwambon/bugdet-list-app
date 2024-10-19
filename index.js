@@ -107,17 +107,91 @@ program
     );
     fs.writeFileSync("./data/budget.json", JSON.stringify(budgetStored));
     if (budgetStored.length === budget.length) {
-        console .log(chalk.blue`nothing has been deleted '${title}' doesn't exist`)
-        return;
+      console.log(
+        chalk.blue`nothing has been deleted '${title}' doesn't exist`,
+      );
+      return;
     }
     console.log(
       chalk.bgYellowBright`budget with '${title}' has been deleted successfully`,
     );
   });
 
-  //update
-  program
+//update
+//program
+//.command("update")
+//.describe("update the budget list using title, quantity , price")
+//.option("-title |--title","title to be updated")
+//.action(function(options){
+//const title = options.title;
+//const loadedBudget = fs.readFileSync("./data/budget.json", "utf-8");
+//const budget = JSON.parse(loadedBudget);
+//if (title){
+//    budget.find(
+//       (currentBudget) => currentBudget.title === title,)
+//}
+
+//})
+
+//update
+program
   .command("update")
-  .describe("update the budget list using title, quantity , price")
-  .option("-title |--title","title to be updated")
+  .description("update the budget list using title, quantity, price")
+  .option("-title| --title <value>", "title of the item to be updated")
+  .option("-newTitle| --newTitle <value>", "new title for the budget item")
+  .option(
+    "-newQuantity| --newQuantity <value>",
+    "new quantity of the budget item",
+  )
+  .option("-newPrice| --newPrice <value>", "new price of the budget item")
+  .action(function (options) {
+    const title = options.title;
+    const newTitle = options.newTitle;
+    const newQuantity = options.newQuantity;
+    const newPrice = options.newPrice;
+
+    const loadedBudget = fs.readFileSync("./data/budget.json", "utf-8");
+    const budget = JSON.parse(loadedBudget);
+
+    if (budget.length === 0) {
+      console.log(
+        chalk.bgRedBright(
+          "No items found in the budget. Please add some first!",
+        ),
+      );
+      return;
+    }
+
+    const budgetItem = budget.find(
+      (currentBudget) => currentBudget.title === title,
+    );
+
+    if (!budgetItem) {
+      console.log(
+        chalk.bgRedBright(`No budget item with the title '${title}' found`),
+      );
+      return;
+    }
+
+    if (newTitle) {
+      budgetItem.title = newTitle;
+    }
+    if (newQuantity) {
+      budgetItem.quantity = newQuantity;
+    }
+    if (newPrice) {
+      budgetItem.price = newPrice;
+    }
+
+    fs.writeFileSync("./data/budget.json", JSON.stringify(budget));
+
+    console.log(
+      chalk.bgGreenBright(
+        `Budget item '${title}' has been updated successfully!`,
+      ),
+    );
+  });
+
+program.parse(process.argv);
+
 program.parse(process.argv);
