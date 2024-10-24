@@ -118,22 +118,6 @@ program
   });
 
 //update
-//program
-//.command("update")
-//.describe("update the budget list using title, quantity , price")
-//.option("-title |--title","title to be updated")
-//.action(function(options){
-//const title = options.title;
-//const loadedBudget = fs.readFileSync("./data/budget.json", "utf-8");
-//const budget = JSON.parse(loadedBudget);
-//if (title){
-//    budget.find(
-//       (currentBudget) => currentBudget.title === title,)
-//}
-
-//})
-
-//update
 program
   .command("update")
   .description("update the budget list using title, quantity, price")
